@@ -11,6 +11,17 @@
 ;; minuto-final.
 
 ;; ESPECIFICAÇÃO
+;; horario1 horario2 -> Disponibilidade
+;; Compara o horário de reserva entre duas aulas. Produz
+;; "Disponível" se não houver conflito entre os horários,
+;; produz "Conflito de horários" caso contrário.
+;; (define (verifica-conflito horario1 horario2) ...)
+;; Exemplos:
+;; horario1 10:00-11:00, horario2 11:00-12:00, produz
+;; "Disponível".
+;; horario1 10:00-11:00, horario2 10:30-11:30, produz
+;; "Conflito de Horário".
+
 
 ;; IMPLEMENTAÇÃO
 
