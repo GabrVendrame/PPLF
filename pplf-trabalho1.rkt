@@ -1,64 +1,76 @@
 #lang racket
+(require examples)
+;; Aluno: Gabriel de Souza Vendrame RA: 112681
 
-#|
-ANÁLISE
+;; (EXERCICIO 1)
+#| ANÁLISE
 Verificar se duas reservas de horário não conflitam
 entre si, ou seja, se os dois horários podem ser reservados.
 |#
 
-#|
-DEFINIÇÃO TIPOS DE DADOS
+#| DEFINIÇÃO TIPOS DE DADOS
 Informações: horários de duas aulas.
 
 Representações:
-horários são subdividido em horas e minutos.
-horas podem assumir valores entre [0, 23] e minutos podem assumir
-valores entre [0, 59].
+horario é uma struct com os dados hora-inicial, minuto-inicial, hora-final, minuto-final.
+horas podem assumir valores entre [8, 18] e minutos podem assumir valores entre [0, 59].
 
-disponibilidade é um tipo booleano com valores:
-#t caso não exista conflitos entre os horários.
-#f caso exista confilitos entre os horários.
+conflito é um tipo booleano com valores:
+#f caso não exista conflitos entre os horários.
+#t caso exista confilitos entre os horários.
 |#
 
-#|
-ESPECIFICAÇÃO
-horario1 horario2 -> disponibilidade.
+#| ESPECIFICAÇÃO
+horario1 horario2 -> conflito.
 Verifica se duas aulas podem reservar a mesma sala sem que haja
 conflito de horário. Retorna #t caso os dois horários não conflitem,
 #f caso contrário.
-(define (verifica-reserva
-         horario-1
-         horario-2) ...)
+(define (conflito?
+         reuniao1
+         reuniao2) ...)
 Exemplos:
-horario-1 8:00 9:40, horario-2 9:40 11:20, retorna #t pois a partir
-de 9:40 a sala estará livre.
-horario-1 8:00 9:40, horario-2 8:50 9:40, retorna #f pois as 8:50 a
-sala continua em uso pelo horario-1.
-horario-1 8:00 9:40, horario-2 8:00 9:40, retorna #f pois ambos
-horários tem começo e término na mesma hora.
+reuniao1 8:00 8:50, reuniao2 14:00 14:50, retorna #f pois não há conflito de horário.
+reuniao1 8:00 8:50, reuniao2 8:50 9:40, retorna #f pois a reuniao1 já esta finalizada no momento que a reuniao2 começa.
+reuniao1 10:00 10:20, reuniao2 10:30 12:00, retorna #f pois não há conflito entre os horários.
+reuniao1 9:00 12:00, reuniao2 10:00 11:00, retorna #t pois a sala está ocupada pela reuniao1 no início da reuniao2.
+reuniao1 10:00 11:00, reuniao2 10:30 11:30, retorna #t pois a reuniao1 ainda esta usando a sala no inicio da reuniao2.
+reuniao1 13:00 13:30, reuniao2 13:00 13:30, retorna #t pois ambas reunioes são no mesmo horário.
+reuniao1 17:30 18:00, reuniao2 14:30 18:00, retorna #t, reuniao2 ainda está ocorrendo no começo da reuniao1.
 |#
 
-#|
-IMPLEMENTAÇÃO
-|#
-(struct horario (hora-inicial minuto-inicial hora-final minuto-final))
+;; IMPLEMENTAÇÃO
 
-(define horario1 (horario 13 0 14 0))
-(define horario2 (horario 15 0 16 0))
-
-(horario-minuto-inicial horario1)
-
-#|
-(define (verifica-reserva
-         horario1
-         horario2)
-  (if (= horario-hora-inicial horario1 horario-hora-inicial horario2)))
+(struct horario (hora-inicial minuto-inicial hora-final minuto-final) #:transparent)
+#| Horário representa a reserva de hora para a sala de reunião.
+hora-inicial: número - hora inicial da reserva (exemplo 9:00-12:00, a hora inicial seria 9).
+minuto-inicial: número - minuto inicial da reserva (no exemplo acima minuto inicial seria 0).
+hora-final: número - hora final da reserva (no exemplo anterior hora final seria 12).
+minuto-final número - minuto final da reserva (no exemplo citado minuto final seria 0).
 |#
 
-#|
-VERIFICAÇÃO
-|#
-
-#|
-REVISÃO
-|#
+(define (conflito? reuniao1 reuniao2)
+                   (cond
+                     [(= (horario-hora-inicial reuniao1) (horario-hora-inicial reuniao2))
+                      (cond
+                        [(= (horario-minuto-inicial reuniao1) (horario-minuto-inicial reuniao2)) #t]
+                        [(< (horario-minuto-inicial reuniao1) (horario-minuto-inicial reuniao2))
+                         (cond
+                           [(<= (horario-minuto-final reuniao1) (horario-minuto-inicial reuniao2)) #f]
+                           [else #t])])]
+                     [(< (horario-hora-inicial reuniao1) (horario-hora-inicial reuniao2))
+                      (cond
+                        [(<= (horario-hora-final reuniao1) (horario-hora-inicial reuniao2)) #f]
+                        [else #t])]
+                     [else
+                      (cond
+                        [(>= (horario-hora-inicial reuniao1) (horario-hora-final reuniao2)) #f]
+                        [else #t])]))
+                      
+;; VERIFICAÇÃO 
+(examples
+ (check-equal? (conflito? (horario 8 0 8 50) (horario 14 0 14 50)) #f)
+ (check-equal? (conflito? (horario 8 0 8 50) (horario 8 50 9 40)) #f)
+ (check-equal? (conflito? (horario 10 0 10 20) (horario 10 30 12 00)) #f)
+ (check-equal? (conflito? (horario 9 0 12 0) (horario 10 0 11 0)) #t)
+ (check-equal? (conflito? (horario 13 0 13 30) (horario 13 0 13 30)) #t)
+ (check-equal? (conflito? (horario 17 30 18 0) (horario 14 30 18 0)) #t))
