@@ -87,16 +87,18 @@ Determinar a nova posição do personagem no tabuleiro.
 Informações: localização atual do personagem e um comando.
 
 Representações:
-personagem é uma struct com o ponto (x, y), que representa a localização no tabuleiro, e a posição em que ele está virado.
+personagem é uma struct com o ponto (x, y), que representa a localização no tabuleiro, e a direção em que ele está virado.
+x, y recebem valores entre [1, 10].
+direção recebe uma das 4 direções cardeais (norte, sul, leste, oeste).
 
 comando também é uma struct que pode assumir dois valores:
 "virar", que tera duas opções, "esquerda" e "direita"
-"avancar", que tem apenas a opção de avançar na posição em que está virado.
+"avancar", que avança n posições na direção que está virado.
 |#
 
 #| ESPECIFICAÇÃO
 personagem comando -> nova-posicao.
-Faz um avanço ou uma mudança na posição em que o personagem está virado.
+Faz um avanço na direção em que o personagem está virado ou muda a direção em que o personagem está virado.
 Retorna a nova posição do personagem de acordo com o comando especificado.
 (define (jogada
          personagem
