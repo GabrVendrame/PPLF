@@ -3,13 +3,14 @@
 ;; Aluno: Gabriel de Souza Vendrame RA: 112681
 
 ;; (EXERCICIO 1)
+
 #| ANÁLISE
 Verificar se duas reservas de horário não conflitam
 entre si, ou seja, se os dois horários podem ser reservados.
 |#
 
 #| DEFINIÇÃO TIPOS DE DADOS
-Informações: horários de duas aulas.
+Informações: horários de duas reuniões.
 
 Representações:
 horario é uma struct com os dados hora-inicial, minuto-inicial, hora-final, minuto-final.
@@ -22,8 +23,8 @@ conflito é um tipo booleano com valores:
 
 #| ESPECIFICAÇÃO
 horario1 horario2 -> conflito.
-Verifica se duas aulas podem reservar a mesma sala sem que haja
-conflito de horário. Retorna #t caso os dois horários não conflitem,
+Verifica se duas reuniões podem reservar a mesma sala sem que haja
+conflito de horário. Retorna #t caso os dois horários não conflitam,
 #f caso contrário.
 (define (conflito?
          reuniao1
@@ -74,3 +75,45 @@ minuto-final número - minuto final da reserva (no exemplo citado minuto final s
  (check-equal? (conflito? (horario 9 0 12 0) (horario 10 0 11 0)) #t)
  (check-equal? (conflito? (horario 13 0 13 30) (horario 13 0 13 30)) #t)
  (check-equal? (conflito? (horario 17 30 18 0) (horario 14 30 18 0)) #t))
+
+;; (EXERCICIO 2)
+
+#| ANÁLISE
+Determinar a nova posição do personagem no tabuleiro.
+|#
+
+#| DEFINIÇÃO TIPOS DE DADOS
+Informações: localização atual do personagem e um comando.
+
+Representações:
+personagem é uma struct com o ponto (x, y), que representa a localização no tabuleiro, e a posição em que ele está virado.
+
+comando é uma string que pode assumir três valores:
+"direita".
+"esquerda".
+"avançar n".
+|#
+
+#| ESPECIFICAÇÃO
+personagem comando -> nova-posicao.
+Faz um avanço ou uma mudança na posição em que o personagem está virado.
+Retorna a nova posição do personagem de acordo com o comando especificado.
+(define (jogada
+         personagem
+         comando) ...)
+Exemplos:
+personagem (2, 8) "norte", comando "direita", retorna personagem (2, 8) "leste".
+personagem (3, 5) "norte", comando "esquerda", retorna personagem (3, 5) "oeste".
+personagem (3, 2) "sul", comando "direita", retorna personagem (3, 2) "oeste".
+personagem (5, 4) "sul", comando "esquerda", retorna personagem (5, 4) "leste".
+personagem (1, 9) "leste", comando "direita", retorna personagem (5, 4) "sul".
+personagem (9, 10) "leste", comando "esquerda", retorna personagem (9, 10) "norte".
+personagem (1, 6) "oeste", comenado "direita", retorna personagem (1, 6) "norte".
+personagem (1, 2) "oeste", comenado "esquerda", retorna personagem (1, 2) "sul".
+personagem (4, 9) "norte", comando "avancar 1", retorna personagem (4, 10) "norte".
+personagem (7, 6) "sul", comando "avancar 2", retorna personagem (5, 6) "sul".
+personagem (6, 10) "leste", comando "avancar 2", retorna personagem (8, 10) "leste".
+personagem (9, 3) "oeste", comando "avancar 1", retorna personagem (8, 3) "oeste".
+|#
+
+;; IMPLEMENTAÇÃO
