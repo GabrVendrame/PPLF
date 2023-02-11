@@ -1,54 +1,68 @@
 #lang racket
+(require examples)
 
-;; ex1 slide fundamentos
-(define (gasto-combustivel distancia preco rendimento)
-  (/ (* distancia preco) rendimento))
-;; ex2 slide fundamentos
+;; LISTA PROJETO DE FUNÇÕES
 
+;; 1) Projete uma função que encontre o máximo entre dois números dados.
 
-;; exemplo de condicionais
-(define (e-logico x y)
-  (if x y #f))
-(define (ou-logico x y)
-  (if x #t y))
+#| ANÁLISE
+Encontrar o maior valor entre dois números.
+|#
 
-;; lista de ex1
-;; EX1
+#| DEFINIÇÃO DOS DADOS
+Informações: 2 números dados.
+Ambos números inteiros.
+|#
 
-10 ;; = 10
-(+ 5 3 4) ;; = 12
-(- 9 1) ;; = 8
-(- 9) ;; = -9
-(/ 6 2) ;; = 3
-(/ 4) ;; = 1/4
-(*) ;; = 1
-(+) ;; = 0
-(+ (* 2 4) (- 4 6)) ;; = 6
+#| ESPECIFICAÇÃO
+Número Número -> Número
 
-(define a 3)
-(define b (+ a 1))
-(+ a b (* a b)) ;; = 19
-(= a b) #f
+Encontra o maior número entre dois valores.
 
-(if (and (> b a) (< b (* a b)))
-b
-a)
-;; = 4
+(define (maximo num1 num2)
+  ...)
 
-(cond [(= a 4) 6]
-[(= b 4) (+ 6 7 a)]
-[else 25]) ;; = 16
+Exemplos
+num1 3, num2 3, retorna 3 como máximo.
+num1 15, num2 42, retorna 42 como máximo.
+num1 65, num2 43, retorna 65 como máxixmo.
+|#
 
-(+ 2 (if (> b a) b a)) ;; = 6
+;; IMPLEMENTAÇÃO
 
-(* (cond [(> a b) a]
-[(< a b) b]
-[else -1])
-(+ a 1)) ;; = 16
+(define (maximo num1 num2)
+  (if (>= num1 num2)
+      num1
+      num2))
 
-;; EX2
-;; a) expressao invalida
-;; b) expressao invalida
-;; c) expressao valida
-;; d) expressao invalida
-;; e) expressao invalida
+;; VERIFICAÇÃO
+
+(examples
+ (check-equal? (maximo 3 3) 3)
+ (check-equal? (maximo 15 42) 42)
+ (check-equal? (maximo 65 43) 65))
+
+;; 2) Projete uma função que receba 3 números como parâmetros e retorne a soma dos quadrados dos dois maiores números.
+
+#| ÁNALISE
+Definir a soma dos quadrados dos dois maiores números entre 3 números dados.
+|#
+
+#| DEFINIÇÃO DOS TIPOS DE DADOS
+Informações: 3 números passados por parâmetro.
+
+Os 3 números são inteiros.
+|#
+
+#| ESPECIFICAÇÃO
+Número Número Número -> Número
+Encontra os dois maiores números entre os três dados e retorna a soma dos quadrados desses números.
+
+(define (soma-quadrados num1 num2 num3)
+  ...)
+
+Exemplos
+num1 1, num2 74, num3 13, retorna 5645.
+num1 19, num2 16, num3 5, retorna 617.
+num1 16, num2 10, num3 12, retorna 400.
+|#
