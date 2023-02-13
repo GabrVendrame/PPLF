@@ -5,8 +5,7 @@
 ;; (EXERCICIO 1)
 
 #| ANÁLISE
-Verificar se duas reservas de horário não conflitam
-entre si, ou seja, se os dois horários podem ser reservados.
+Verificar se duas reservas de horário não conflitam entre si, ou seja, se os dois horários podem ser reservados.
 |#
 
 #| DEFINIÇÃO TIPOS DE DADOS
@@ -174,3 +173,65 @@ caso acao = avancar é um número - representa a quantidade de casas que o jogad
  (check-equal? (jogada (personagem 7 6 "sul") (comando "avancar" 2)) (personagem 7 4 "sul"))
  (check-equal? (jogada (personagem 6 10 "leste") (comando "avancar" 2)) (personagem 8 10 "leste"))
  (check-equal? (jogada (personagem 9 3 "oeste") (comando "avancar" 1)) (personagem 8 3 "oeste")))
+
+;; (EXERCÍCIO 3)
+
+#| ANÁLISE
+Converter uma lista de números para uma lista de strings onde todos os elementos possuam o mesmo número de caracteres.
+|#
+
+#| DEFINIÇÃO TIPOS DE DADOS
+Informações: entrada é uma lista de inteiros.
+
+Representações:
+lista-int é uma lista com pelo menos 1 número inteiro, podendo ter até n números inteiros.
+lista-str é a lista-int convertida para string com todos os elementos contendo o mesmo tamanho.
+|#
+
+#| ESPECIFICAÇÃO
+lista -> lista.
+Converte uma lista de inteiros para uma lista de strings.
+Retorna a lista de string com todos os elementos da lista possuindo o mesmo tamanho (quantidade de caracteres).
+(define (converte-lista lista-int)
+  ...)
+Exemplos:
+lista-int (0), retorna lista-string (0).
+lista-int (1 5 7 10 4), retorna lista-string (01 05 07 10 04).
+lista-int (38 30 17 100 39), retorna lista-string (038 008 007 100 039).
+lista-int (5 7 3 3 73 18 100 215 1000 572), retorna lista-string (0005 0007 0003 0003 0073 0018 0100 0215 1000 0572).
+|#
+
+;; IMPLEMENTAÇÃO
+
+;; VERIFICAÇÃO
+(examples)
+
+;; (EXERCÍCIO 4)
+
+#| ANÁLISE
+Verificar se uma string é um palíndromo.
+|#
+
+#| DEFINIÇÃO TIPOS DE DADOS
+Informações: entrada é uma string.
+
+Representações:
+palavra é uma string.
+|#
+
+#| ESPECIFICAÇÃO
+palavra -> boolean.
+A função verifica se a string dada é um palíndromo (escrita de trás pra frente é igual a escrita normal).
+Retorna #t caso a string seja um palíndromo, #f caso contrário.
+(define (palindromo? palavra)
+  ...)
+Exemplos:
+"socorram-me subi no ônibus em Marrocos", retorna #t.
+"aibofobia", retorna #t.
+"roma", retorna #f.
+|#
+
+;; IMPLEMENTAÇÃO
+
+;; VERIFICAÇÃO
+(examples)
