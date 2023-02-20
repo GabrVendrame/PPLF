@@ -149,28 +149,29 @@ Converter uma lista de números para uma lista de strings onde todos os elemento
 |#
 
 #| DEFINIÇÃO TIPOS DE DADOS
-Informações: entrada é uma lista de inteiros.
+Informações: entrada é uma lista de números.
 
 Representações:
-lista-int é uma lista com pelo menos 1 número inteiro, podendo ter até n números inteiros.
-lista-str é a lista-int convertida para string com todos os elementos contendo o mesmo tamanho.
+ldn é uma lista com pelo menos 1 número, podendo ter até n números.
+lista-str é a ldn convertida para string com todos os elementos contendo o mesmo tamanho.
 |#
 
 #| ESPECIFICAÇÃO
-lista-int -> lista-strings.
-Converte uma lista de inteiros para uma lista de strings.
+ldn -> lista-str.
+Converte uma lista de números para uma lista de strings.
 Retorna a lista de string com todos os elementos da lista possuindo o mesmo tamanho (quantidade de caracteres).
 |#
+
 (examples
  (check-equal? (converte-lista empty) empty)
- (check-equal? (converte-lista (0)) (0))
- (check-equal? (converte-lista (1 5 7 10 4)) (01 05 07 10 04))
- (check-equal? (converte-lista (38 30 17 100 39)) (038 030 017 100 039))
- (check-equal? (converte-lista (5 7 3 3 73 18 100 215 1000 572)) (0005 0007 0003 0003 0073 0018 0100 0215 1000 0572)))
+ (check-equal? (converte-lista (cons 0 empty)) (cons 0 empty))
+ (check-equal? (converte-lista (cons 1 (cons 5 (cons 7 (cons 10 (cons 4 empty)))))) (cons 01 (cons 05 (cons 07 (cons 10 (cons 04 empty))))))
+ (check-equal? (converte-lista (cons 4 (cons 30 (cons 17 (cons 100 (cons 1 empty)))))) (cons 004 (cons 030 (cons 017 (cons 100 (cons 001 empty))))))
+ (check-equal? (converte-lista (cons 7 (cons 3 (cons 73 (cons 18 (cons 215 (cons 1000 (cons 572 empty))))))))
+               (cons 0007 (cons 0003 (cons 0073 (cons 0018 (cons 0215 (cons 1000 (cons 0572 empty)))))))))
                 
-(define (converte-lista lista-int)
+(define (converte-lista ldn)
   ...)
-
 
 ;; (EXERCÍCIO 4)
 
