@@ -161,17 +161,38 @@ ldn -> lista-str.
 Converte uma lista de números para uma lista de strings.
 Retorna a lista de string com todos os elementos da lista possuindo o mesmo tamanho (quantidade de caracteres).
 |#
+#|
+(examples
+ (check-equal? (converte-lista empty) "empty")
+ (check-equal? (converte-lista (list 0)) (list "0"))
+ (check-equal? (converte-lista (list 10 5 7 1 4)) (list "10" "05" "07" "01" "04"))
+ (check-equal? (converte-lista (list 4 30 100 17 1)) (list "004" "030" "100" "017" "001"))
+ (check-equal? (converte-lista (list 7 3 73 18 215 572 1000)) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
+|#
 
 (examples
- (check-equal? (converte-lista empty) empty)
- (check-equal? (converte-lista (cons 0 empty)) (cons 0 empty))
- (check-equal? (converte-lista (cons 1 (cons 5 (cons 7 (cons 10 (cons 4 empty)))))) (cons 01 (cons 05 (cons 07 (cons 10 (cons 04 empty))))))
- (check-equal? (converte-lista (cons 4 (cons 30 (cons 17 (cons 100 (cons 1 empty)))))) (cons 004 (cons 030 (cons 017 (cons 100 (cons 001 empty))))))
- (check-equal? (converte-lista (cons 7 (cons 3 (cons 73 (cons 18 (cons 215 (cons 1000 (cons 572 empty))))))))
-               (cons 0007 (cons 0003 (cons 0073 (cons 0018 (cons 0215 (cons 1000 (cons 0572 empty)))))))))
-                
+ (check-equal? (para-string '(1 2 3)) '("1" "2" "3"))) 
+
+(define (para-string ldn)
+  (cond
+    [(empty? ldn) empty]
+    [else
+     (cond
+       [... (para-string ldn)])]))
+
+(define (maior-string ldn)
+  (cond
+    [(empty? ldn) empty]
+    [else
+     ... (maior-string ldn)]))
+
 (define (converte-lista ldn)
-  ...)
+  (cond
+    [(empty? ldn) empty]
+    [else
+     (para-string ldn)
+     (converte-lista ldn)]))
+     
 
 ;; (EXERCÍCIO 4)
 
@@ -191,10 +212,13 @@ palavra -> boolean.
 A função verifica se a string dada é um palíndromo (escrita de trás pra frente é igual a escrita normal).
 Retorna #t caso a string seja um palíndromo, #f caso contrário.
 |#
+#|
 (examples
  (check-equal? (palindromo? ("socorram-me subi no ônibus em Marrocos")) #t)
  (check-equal? (palindromo? ("aibofobia")) #t)
  (check-equal? (palindromo? ("roma")) #f))
-
+|#
+#|
 (define (palindromo? palavra)
   ...)
+|#
