@@ -157,42 +157,74 @@ lista-str é a ldn convertida para string com todos os elementos contendo o mesm
 |#
 
 #| ESPECIFICAÇÃO
-ldn -> lista-str.
-Converte uma lista de números para uma lista de strings.
+lista-de-numeros -> lista-str.
 Retorna a lista de string com todos os elementos da lista possuindo o mesmo tamanho (quantidade de caracteres).
 |#
-#|
 (examples
- (check-equal? (converte-lista empty) "empty")
- (check-equal? (converte-lista (list 0)) (list "0"))
- (check-equal? (converte-lista (list 10 5 7 1 4)) (list "10" "05" "07" "01" "04"))
- (check-equal? (converte-lista (list 4 30 100 17 1)) (list "004" "030" "100" "017" "001"))
- (check-equal? (converte-lista (list 7 3 73 18 215 572 1000)) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
-|#
+ (check-equal? (ldn-para-lds empty) empty)
+ (check-equal? (ldn-para-lds (list 0)) (list "0"))
+ (check-equal? (ldn-para-lds (list 10 5 7 1 4)) (list "10" "05" "07" "01" "04"))
+ (check-equal? (ldn-para-lds (list 4 30 100 17 1)) (list "004" "030" "100" "017" "001"))
+ (check-equal? (ldn-para-lds (list 7 3 73 18 215 572 1000)) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
 
+(define (ldn-para-lds ldn)
+  (define lds (para-string ldn))
+  (define maior (maior-string lds 0))
+  (completa-string lds maior))
+
+#|
+lista-de-numeros -> lista-de-strings.
+Converte uma lista de números para uma lista de strings.
+|#
 (examples
- (check-equal? (para-string '(1 2 3)) '("1" "2" "3"))) 
+ (check-equal? (para-string (list)) empty)
+ (check-equal? (para-string (list 1 2 3)) (list "1" "2" "3")))
 
 (define (para-string ldn)
   (cond
     [(empty? ldn) empty]
     [else
      (cond
-       [... (para-string ldn)])]))
+       [(number? (first ldn)) (cons (number->string (first ldn)) (para-string (rest ldn)))]
+       [else (cons (first ldn) (para-string (rest ldn)))])]))
 
-(define (maior-string ldn)
-  (cond
-    [(empty? ldn) empty]
-    [else
-     ... (maior-string ldn)]))
+#|
+lista-de-strings -> tamanho.
+Retorna o tamanho da maior string de uma lista de strings.
+|#
+(examples
+ (check-equal? (maior-string (list) 0) 0)
+ (check-equal? (maior-string (list "1") 0) 1)
+ (check-equal? (maior-string (list "5" "100" "23") 0) 3)
+ (check-equal? (maior-string (list "5" "23" "8742") 0) 4))
 
-(define (converte-lista ldn)
+(define (maior-string lds maior)
   (cond
-    [(empty? ldn) empty]
+    [(empty? lds) maior]
     [else
-     (para-string ldn)
-     (converte-lista ldn)]))
-     
+     (if (> (string-length (first lds)) maior)
+         (maior-string (rest lds) (string-length (first lds)))
+         (maior-string (rest lds) maior))]))
+
+#|
+lista-de-strings maior-string -> lista de string.
+Retorna uma lista de strings com todas as strings do mesmo tamanho.
+|#
+(examples
+ (check-equal? (completa-string (list) 0) empty)
+ (check-equal? (completa-string (list "0") 1) (list "0"))
+ (check-equal? (completa-string (list "10" "5" "7" "1" "4") 2) (list "10" "05" "07" "01" "04"))
+ (check-equal? (completa-string (list "4" "30" "100" "17" "1") 3) (list "004" "030" "100" "017" "001"))
+ (check-equal? (completa-string (list "7" "3" "73" "18" "215" "572" "1000") 4) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
+
+(define (completa-string lds maior)
+  (cond
+    [(empty? lds) empty]
+    [else
+     (if (< (string-length (first lds)) maior)
+         (cons (string-append (make-string (- maior (string-length (first lds))) #\0) (first lds)) (completa-string (rest lds) maior))
+         (cons (first lds) (completa-string (rest lds) maior)))]))
+
 
 ;; (EXERCÍCIO 4)
 
