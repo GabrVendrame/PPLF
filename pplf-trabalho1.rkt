@@ -251,10 +251,10 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
  (check-equal? (palindromo? "roma") #f))
 
 (define (palindromo? palavra)
-  (define palavra-aux (string-downcase palavra))
-  (define lst-palavra (string-split palavra-aux ""))
-  (define lst-palavra-sem-diacritico (retira-diacriticos lst-palavra))
-  (equal? lst-palavra-sem-diacritico (reverso lst-palavra-sem-diacritico)))
+  (define palavra-minusculo (string-downcase palavra))
+  (define lst-palavra (string-split palavra-minusculo ""))
+  (define lst-pal-sem-diacrit (retira-diacriticos lst-palavra))
+  (equal? lst-pal-sem-diacrit (reverso lst-pal-sem-diacrit)))
 
 ;; Lista(Strings) -> Lista(Strings)
 ;; Recebe uma lista de strings com sinais diacríticos e retorna uma lista de strings sem sinais diacríticos.
@@ -272,9 +272,9 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
      (cond
        [(or (equal? (first lst-palavra) "-") (equal? (first lst-palavra) "/") (equal? (first lst-palavra) "?") (equal? (first lst-palavra) "!")
             (equal? (first lst-palavra) ",") (equal? (first lst-palavra) ".") (equal? (first lst-palavra) " ")) (equal? (first lst-palavra) #\") (retira-diacriticos (rest lst-palavra))]
-       [else (cons (acentos (first lst-palavra)) (retira-diacriticos (rest lst-palavra)))])]))
+       [else (cons (remove-acentos (first lst-palavra)) (retira-diacriticos (rest lst-palavra)))])]))
 
-(define (acentos lst-palavra)
+(define (remove-acentos lst-palavra)
   (cond
     [(or (equal? lst-palavra "á") (equal? lst-palavra "à") (equal? lst-palavra "ã") (equal? lst-palavra "â")) "a"]
     [(or (equal? lst-palavra "é") (equal? lst-palavra "è") (equal? lst-palavra "ê")) "e"]
