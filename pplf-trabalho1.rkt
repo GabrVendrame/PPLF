@@ -21,7 +21,7 @@ conflito é um tipo booleano com valores:
 |#
 
 #| ESPECIFICAÇÃO
-horario1 horario2 -> boolean.
+Número Número Número Número -> Boolean.
 Verifica se duas reuniões podem reservar a mesma sala sem que haja
 conflito de horário. Retorna #t caso os dois horários não conflitam,
 #f caso contrário.
@@ -53,7 +53,6 @@ conflito de horário. Retorna #t caso os dois horários não conflitam,
        [(>= (horario-hora-inicial reuniao1) (horario-hora-final reuniao2)) #f]
        [else #t])]))
 
-(struct horario (hora-inicial minuto-inicial hora-final minuto-final) #:transparent)
 #|
 Horário representa a reserva de hora para a sala de reunião.
 hora-inicial: número - hora inicial da reserva (exemplo 9:00-12:00, a hora inicial seria 9).
@@ -61,6 +60,7 @@ minuto-inicial: número - minuto inicial da reserva (no exemplo acima minuto ini
 hora-final: número - hora final da reserva (no exemplo anterior hora final seria 12).
 minuto-final número - minuto final da reserva (no exemplo citado minuto final seria 0).
 |#
+(struct horario (hora-inicial minuto-inicial hora-final minuto-final) #:transparent)
 
 
 ;; (EXERCICIO 2)
@@ -83,7 +83,7 @@ comando também é uma struct que pode assumir dois valores:
 |#
 
 #| ESPECIFICAÇÃO
-personagem comando -> nova-posicao.
+Struct Struct -> Struct.
 Faz um avanço na direção em que o personagem está virado ou muda a direção em que o personagem está virado.
 Retorna a nova posição do personagem de acordo com o comando especificado.
 |#
@@ -125,21 +125,21 @@ Retorna a nova posição do personagem de acordo com o comando especificado.
        [(equal? (personagem-direcao jogador) "leste") (struct-copy personagem jogador [x (+ (personagem-x jogador) (comando-valor movimento))])]
        [else (struct-copy personagem jogador [x (- (personagem-x jogador) (comando-valor movimento))])])]))
 
-(struct personagem (x y direcao)#:transparent)
 #|
 personagem representa o jogador no tabuleiro.
 x: número - representa a coordenada x do jogador no tabuleiro.
 y: número - representa a coordenada y do jogador no tabuleiro.
 direcao: string - representa a direção cardeal em que o jogador está virado.
 |#
+(struct personagem (x y direcao)#:transparent)
 
-(struct comando (acao valor)#:transparent)
 #|
 comando representa a próxima jogada do jogador no tabuleiro.
 acao: string - representa a ação do movimento escolhido, virar ou avançar.
 valor: caso acao = virar é uma string - representa a direção em que o jogador irá virar, esquerda ou direita.
 caso acao = avancar é um número - representa a quantidade de casas que o jogador irá avançar.
 |#
+(struct comando (acao valor)#:transparent)
 
 
 ;; (EXERCÍCIO 3)
@@ -157,7 +157,7 @@ lista-str é a ldn convertida para string com todos os elementos contendo o mesm
 |#
 
 #| ESPECIFICAÇÃO
-lista-de-numeros -> lista-str.
+Lista(Números) -> Lista(Strings).
 Retorna a lista de string com todos os elementos da lista possuindo o mesmo tamanho (quantidade de caracteres).
 |#
 (examples
@@ -173,7 +173,7 @@ Retorna a lista de string com todos os elementos da lista possuindo o mesmo tama
   (completa-string lds maior))
 
 #|
-lista-de-numeros -> lista-de-strings.
+Lista(Números) -> Lista(Strings).
 Converte uma lista de números para uma lista de strings.
 |#
 (examples
@@ -189,7 +189,7 @@ Converte uma lista de números para uma lista de strings.
        [else (cons (first ldn) (para-string (rest ldn)))])]))
 
 #|
-lista-de-strings -> tamanho.
+Lista(Strings) -> Inteiro.
 Retorna o tamanho da maior string de uma lista de strings.
 |#
 (examples
@@ -207,7 +207,7 @@ Retorna o tamanho da maior string de uma lista de strings.
          (maior-string (rest lds) maior))]))
 
 #|
-lista-de-strings maior-string -> lista de string.
+Lista(Strings) Inteiro -> Lista(Strings).
 Retorna uma lista de strings com todas as strings do mesmo tamanho.
 |#
 (examples
@@ -240,17 +240,74 @@ palavra é uma string.
 |#
 
 #| ESPECIFICAÇÃO
-palavra -> boolean.
+String -> Boolean.
 A função verifica se a string dada é um palíndromo (escrita de trás pra frente é igual a escrita normal).
 Retorna #t caso a string seja um palíndromo, #f caso contrário.
 |#
-#|
+
 (examples
- (check-equal? (palindromo? ("socorram-me subi no ônibus em Marrocos")) #t)
- (check-equal? (palindromo? ("aibofobia")) #t)
- (check-equal? (palindromo? ("roma")) #f))
-|#
-#|
+ (check-equal? (palindromo? "SoCoRrAm-Me SuBi No ÔnIbUs Em MaRrOcOs") #t)
+ (check-equal? (palindromo? "aiboFOBIA") #t)
+ (check-equal? (palindromo? "roma") #f))
+
 (define (palindromo? palavra)
-  ...)
-|#
+  (define palavra-aux (string-downcase palavra))
+  (define lst-palavra (string-split palavra-aux ""))
+  (define lst-palavra-sem-diacritico (retira-diacriticos lst-palavra))
+  (equal? lst-palavra-sem-diacritico (reverso lst-palavra-sem-diacritico)))
+
+;; Lista(Strings) -> Lista(Strings)
+;; Recebe uma lista de strings com sinais diacríticos e retorna uma lista de strings sem sinais diacríticos.
+
+(examples
+ (check-equal? (retira-diacriticos '()) empty)
+ (check-equal? (retira-diacriticos
+                '("" "s" "o" "c" "o" "r" "r" "a" "m" "-" "m" "e" " " "s" "u" "b" "i" " " "n" "o" " " "ô" "n" "i" "b" "u" "s" " " "e" "m" " " "m" "a" "r" "r" "o" "c" "o" "s" ""))
+               '("" "s" "o" "c" "o" "r" "r" "a" "m" "m" "e" "s" "u" "b" "i" "n" "o" "o" "n" "i" "b" "u" "s" "e" "m" "m" "a" "r" "r" "o" "c" "o" "s" "")))
+
+(define (retira-diacriticos lst-palavra)
+  (cond
+    [(empty? lst-palavra) empty]
+    [else
+     (cond
+       [(or (equal? (first lst-palavra) "-") (equal? (first lst-palavra) "/") (equal? (first lst-palavra) "?") (equal? (first lst-palavra) "!")
+            (equal? (first lst-palavra) ",") (equal? (first lst-palavra) ".") (equal? (first lst-palavra) " ")) (equal? (first lst-palavra) #\") (retira-diacriticos (rest lst-palavra))]
+       [else (cons (acentos (first lst-palavra)) (retira-diacriticos (rest lst-palavra)))])]))
+
+(define (acentos lst-palavra)
+  (cond
+    [(or (equal? lst-palavra "á") (equal? lst-palavra "à") (equal? lst-palavra "ã") (equal? lst-palavra "â")) "a"]
+    [(or (equal? lst-palavra "é") (equal? lst-palavra "è") (equal? lst-palavra "ê")) "e"]
+    [(or (equal? lst-palavra "í") (equal? lst-palavra "ì") (equal? lst-palavra "î")) "i"]
+    [(or (equal? lst-palavra "ó") (equal? lst-palavra "ò") (equal? lst-palavra "õ") (equal? lst-palavra "ô")) "o"]
+    [(or (equal? lst-palavra "ú") (equal? lst-palavra "ù") (equal? lst-palavra "û")) "u"]
+    [(equal? lst-palavra "ç") "c"]
+    [else lst-palavra]))
+
+;; Lista(Strings) -> Lista(Strings)
+;; Reverte uma lista de strings, ou seja, o primeiro elemento passa a ser o último
+;; o segundo passa a ser o antepenúltimo e assim por diante.
+
+(examples
+ (check-equal? (reverso '()) empty)
+ (check-equal? (reverso '("" "a" "i" "b" "o" "f" "o" "b" "i" "a" "")) '("" "a" "i" "b" "o" "f" "o" "b" "i" "a" ""))
+ (check-equal? (reverso '("" "r" "o" "m" "a" "")) '("" "a" "m" "o" "r" "")))
+
+(define (reverso lst-palavra)
+  (cond
+    [(empty? lst-palavra) empty]
+    [else
+     (cons-fim (first lst-palavra) (reverso (rest lst-palavra)))]))
+
+;; String Lista(String) -> Lista(String).
+;; Adiciona uma string no final de uma lista de strings.
+
+(examples
+ (check-equal? (cons-fim "a" '()) '("a"))
+ (check-equal? (cons-fim "r" '("o" "m" "a")) '("o" "m" "a" "r")))
+
+(define (cons-fim str lst-str)
+  (cond
+    [(empty? lst-str) (cons str empty)]
+    [else
+     (cons (first lst-str) (cons-fim str (rest lst-str)))]))
