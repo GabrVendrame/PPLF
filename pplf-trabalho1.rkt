@@ -241,13 +241,18 @@ palavra é uma string.
 
 #| ESPECIFICAÇÃO
 String -> Boolean.
-A função verifica se a string dada é um palíndromo (escrita de trás pra frente é igual a escrita normal).
+A função verifica se a string dada é um palíndromo (leitura da direita pra esquerda é igual a leitura da esquerda para a direita).
 Retorna #t caso a string seja um palíndromo, #f caso contrário.
 |#
 
 (examples
- (check-equal? (palindromo? "SoCoRrAm-Me SuBi No ÔnIbUs Em MaRrOcOs") #t)
- (check-equal? (palindromo? "aiboFOBIA") #t)
+ (check-equal? (palindromo? "SoCoRrAm-Me SuBi No ÔnIbUs Em MaRrOcOs.") #t)
+ (check-equal? (palindromo? "AIBOFOBIA") #t)
+ (check-equal? (palindromo? "aNã") #t)
+ (check-equal? (palindromo? "sós") #t)
+ (check-equal? (palindromo? "A Daniela ama a lei? Nada!") #t)
+ (check-equal? (palindromo? "À Rita, sátira!") #t)
+ (check-equal? (palindromo? "20/02/2002") #t)
  (check-equal? (palindromo? "roma") #f))
 
 (define (palindromo? palavra)
@@ -311,3 +316,68 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
     [(empty? lst-str) (cons str empty)]
     [else
      (cons (first lst-str) (cons-fim str (rest lst-str)))]))
+
+;; EXERCÍCIO 5
+
+#| ANÁLISE
+Converter uma lista de números para uma lista de strings onde todos os elementos possuam o mesmo número de caracteres.
+|#
+
+#| DEFINIÇÃO TIPOS DE DADOS
+Informações: entrada é uma lista de números.
+
+Representações:
+ldn é uma lista com pelo menos 1 número, podendo ter até n números.
+lista-str é a ldn convertida para string com todos os elementos contendo o mesmo tamanho.
+|#
+
+#| ESPECIFICAÇÃO
+Lista(Números) -> Lista(Strings).
+Retorna a lista de string com todos os elementos da lista possuindo o mesmo tamanho (quantidade de caracteres).
+|#
+(examples
+ (check-equal? (ldn-para-lds-alt empty) empty)
+ (check-equal? (ldn-para-lds-alt (list 0)) (list "0"))
+ (check-equal? (ldn-para-lds-alt (list 10 5 7 1 4)) (list "10" "05" "07" "01" "04"))
+ (check-equal? (ldn-para-lds-alt (list 4 30 100 17 1)) (list "004" "030" "100" "017" "001"))
+ (check-equal? (ldn-para-lds-alt (list 7 3 73 18 215 572 1000)) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
+
+;; EXERCÍCIO 6
+
+#| ANÁLISE
+Verificar se uma string é um palíndromo.
+|#
+
+#| DEFINIÇÃO TIPOS DE DADOS
+Informações: entrada é uma string.
+
+Representações:
+palavra é uma string.
+|#
+
+#| ESPECIFICAÇÃO
+String -> Boolean.
+A função verifica se a string dada é um palíndromo (leitura da direita pra esquerda é igual a leitura da esquerda para a direita).
+Retorna #t caso a string seja um palíndromo, #f caso contrário.
+|#
+
+(examples
+ (check-equal? (eh-palindromo? "SoCoRrAm-Me SuBi No ÔnIbUs Em MaRrOcOs.") #t)
+ (check-equal? (eh-palindromo? "AIBOFOBIA") #t)
+ (check-equal? (eh-palindromo? "aNã") #t)
+ (check-equal? (eh-palindromo? "sós") #t)
+ (check-equal? (eh-palindromo? "A Daniela ama a lei? Nada!") #t)
+ (check-equal? (eh-palindromo? "À Rita, sátira!") #t)
+ (check-equal? (eh-palindromo? "20/02/2002") #t)
+ (check-equal? (eh-palindromo? "roma") #f))
+
+(define (eh-palindromo? palavra)
+  (define lst-palavra (string-split palavra ""))
+  (define minusculo (map string-downcase lst-palavra))
+  (define sem-acentos (map remove-acentos minusculo))
+  (define lst-limpa (filter (lambda (atual) (not (member atual lst-pontuacao))) sem-acentos))
+  (define reverso-lst-limpa (foldl cons '() lst-limpa))
+  (equal? lst-limpa reverso-lst-limpa))
+
+;; lista de pontuações, utilizada para removê-las da lista.
+(define lst-pontuacao '("-" "/" "?" "!" "," "." ";" " "))
