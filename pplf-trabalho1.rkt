@@ -336,12 +336,31 @@ Lista(Números) -> Lista(Strings).
 Retorna a lista de string com todos os elementos da lista possuindo o mesmo tamanho (quantidade de caracteres).
 |#
 (examples
- (check-equal? (ldn-para-lds-alt empty) empty)
- (check-equal? (ldn-para-lds-alt (list 0)) (list "0"))
- (check-equal? (ldn-para-lds-alt (list 10 5 7 1 4)) (list "10" "05" "07" "01" "04"))
- (check-equal? (ldn-para-lds-alt (list 4 30 100 17 1)) (list "004" "030" "100" "017" "001"))
- (check-equal? (ldn-para-lds-alt (list 7 3 73 18 215 572 1000)) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
+ (check-equal? (ldn-para-lds-acc empty) empty)
+ (check-equal? (ldn-para-lds-acc (list 0)) (list "0"))
+ (check-equal? (ldn-para-lds-acc (list 10 5 7 1 4)) (list "10" "05" "07" "01" "04"))
+ (check-equal? (ldn-para-lds-acc (list 4 30 100 17 1)) (list "004" "030" "100" "017" "001"))
+ (check-equal? (ldn-para-lds-acc (list 7 3 73 18 215 572 1000)) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
 
+(define (maior-string-acc lst-str0)
+  ;; acc = tamanho da maior string já visitada
+  (define (iter lst-str acc)
+    (cond
+      [(empty? lst-str) acc]
+      [else
+       (if (> string-length (first lst-str) acc)
+           (iter (rest lst-str) (string-length (first lst-str)))
+           (iter (rest lst-str) acc))]))
+  (iter lst-str0 0))
+
+#;(define (completa-string lds maior)
+  (cond
+    [(empty? lds) empty]
+    [else
+     (if (< (string-length (first lds)) maior)
+         (cons (string-append (make-string (- maior (string-length (first lds))) #\0) (first lds)) (completa-string (rest lds) maior))
+         (cons (first lds) (completa-string (rest lds) maior)))]))
+      
 ;; EXERCÍCIO 6
 
 #| ANÁLISE
