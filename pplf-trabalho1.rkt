@@ -21,7 +21,7 @@ conflito é um tipo booleano com valores:
 |#
 
 #| ESPECIFICAÇÃO
-Número Número Número Número -> Boolean.
+Hora Minuto Hora Minuto -> Boolean.
 Verifica se duas reuniões podem reservar a mesma sala sem que haja
 conflito de horário. Retorna #t caso os dois horários não conflitam,
 #f caso contrário.
@@ -83,7 +83,7 @@ comando também é uma struct que pode assumir dois valores:
 |#
 
 #| ESPECIFICAÇÃO
-Struct Struct -> Struct.
+personagem comando -> personagem.
 Faz um avanço na direção em que o personagem está virado ou muda a direção em que o personagem está virado.
 Retorna a nova posição do personagem de acordo com o comando especificado.
 |#
@@ -126,7 +126,7 @@ Retorna a nova posição do personagem de acordo com o comando especificado.
        [else (struct-copy personagem jogador [x (- (personagem-x jogador) (comando-valor movimento))])])]))
 
 #|
-personagem representa o jogador no tabuleiro.
+personagem representa a posição do jogador no tabuleiro.
 x: número - representa a coordenada x do jogador no tabuleiro.
 y: número - representa a coordenada y do jogador no tabuleiro.
 direcao: string - representa a direção cardeal em que o jogador está virado.
@@ -149,7 +149,7 @@ Converter uma lista de números para uma lista de strings onde todos os elemento
 |#
 
 #| DEFINIÇÃO TIPOS DE DADOS
-Informações: entrada é uma lista de números.
+Informações: lista de números.
 
 Representações:
 ldn é uma lista com pelo menos 1 número, podendo ter até n números.
@@ -178,6 +178,7 @@ Converte uma lista de números para uma lista de strings.
 |#
 (examples
  (check-equal? (para-string (list)) empty)
+ (check-equal? (para-string (list 1)) (list "1"))
  (check-equal? (para-string (list 1 2 3)) (list "1" "2" "3")))
 
 (define (para-string ldn)
@@ -190,7 +191,7 @@ Converte uma lista de números para uma lista de strings.
 
 #|
 Lista(Strings) -> Inteiro.
-Retorna o tamanho da maior string de uma lista de strings.
+Retorna o tamanho da maior string em uma lista de strings.
 |#
 (examples
  (check-equal? (maior-string (list) 0) 0)
@@ -240,8 +241,8 @@ palavra é uma string.
 |#
 
 #| ESPECIFICAÇÃO
-String -> Boolean.
-A função verifica se a string dada é um palíndromo (leitura da direita pra esquerda é igual a leitura da esquerda para a direita).
+palavra -> Boolean.
+A função verifica se uma string é um palíndromo (leitura da direita pra esquerda é igual a leitura da esquerda para a direita).
 Retorna #t caso a string seja um palíndromo, #f caso contrário.
 |#
 
@@ -253,6 +254,7 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
  (check-equal? (palindromo? "A Daniela ama a lei? Nada!") #t)
  (check-equal? (palindromo? "À Rita, sátira!") #t)
  (check-equal? (palindromo? "20/02/2002") #t)
+ (check-equal? (palindromo? "Luza Rocelina, a namorada do Manuel, leu na moda da romana: \"anil é cor azul\".") #t)
  (check-equal? (palindromo? "roma") #f))
 
 (define (palindromo? palavra)
@@ -263,7 +265,7 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
 
 ;; Lista(Strings) -> Lista(Strings)
 ;; Recebe uma lista de strings com sinais diacríticos e retorna uma lista de strings sem sinais diacríticos.
-
+;; OBS: Sinais diacríticos são acentos e pontuações da lingua portuguesa.
 (examples
  (check-equal? (retira-diacriticos '()) empty)
  (check-equal? (retira-diacriticos
@@ -276,7 +278,9 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
     [else
      (cond
        [(or (equal? (first lst-palavra) "-") (equal? (first lst-palavra) "/") (equal? (first lst-palavra) "?") (equal? (first lst-palavra) "!")
-            (equal? (first lst-palavra) ",") (equal? (first lst-palavra) ".") (equal? (first lst-palavra) " ")) (equal? (first lst-palavra) #\") (retira-diacriticos (rest lst-palavra))]
+            (equal? (first lst-palavra) ",") (equal? (first lst-palavra) ".") (equal? (first lst-palavra) " ") (equal? (first lst-palavra) #\")
+            (equal? (first lst-palavra) ";") (equal? (first lst-palavra) ":") (equal? (first lst-palavra) "\"") (equal? (first lst-palavra) "(")
+            (equal? (first lst-palavra) ")") (equal? (first lst-palavra) "[") (equal? (first lst-palavra) "]")) (retira-diacriticos (rest lst-palavra))]
        [else (cons (remove-acentos (first lst-palavra)) (retira-diacriticos (rest lst-palavra)))])]))
 
 (define (remove-acentos lst-palavra)
@@ -290,8 +294,7 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
     [else lst-palavra]))
 
 ;; Lista(Strings) -> Lista(Strings)
-;; Reverte uma lista de strings, ou seja, o primeiro elemento passa a ser o último
-;; o segundo passa a ser o antepenúltimo e assim por diante.
+;; Reverte uma lista de strings, ou seja, o primeiro elemento passa a ser o último o segundo passa a ser o antepenúltimo e assim por diante.
 
 (examples
  (check-equal? (reverso '()) empty)
@@ -320,11 +323,12 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
 ;; EXERCÍCIO 5
 
 #| ANÁLISE
-Converter uma lista de números para uma lista de strings onde todos os elementos possuam o mesmo número de caracteres.
+Converter uma lista de números para uma lista de strings onde todos os elementos possuam o mesmo número de caracteres
+utilizando Acumuladores em situações adequadas.
 |#
 
 #| DEFINIÇÃO TIPOS DE DADOS
-Informações: entrada é uma lista de números.
+Informações: lista de números.
 
 Representações:
 ldn é uma lista com pelo menos 1 número, podendo ter até n números.
@@ -342,29 +346,54 @@ Retorna a lista de string com todos os elementos da lista possuindo o mesmo tama
  (check-equal? (ldn-para-lds-acc (list 4 30 100 17 1)) (list "004" "030" "100" "017" "001"))
  (check-equal? (ldn-para-lds-acc (list 7 3 73 18 215 572 1000)) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
 
+(define (ldn-para-lds-acc ldn)
+  (define lds (para-string ldn))
+  (completa-string-acc lds (maior-string-acc lds)))
+
+#|
+Lista(Strings) -> Inteiro.
+Retorna o tamanho da maior string de uma lista de strings.
+|#
+(examples
+ (check-equal? (maior-string-acc (list)) 0)
+ (check-equal? (maior-string-acc (list "1")) 1)
+ (check-equal? (maior-string-acc (list "5" "100" "23")) 3)
+ (check-equal? (maior-string-acc (list "5" "23" "8742")) 4))
+
 (define (maior-string-acc lst-str0)
   ;; acc = tamanho da maior string já visitada
   (define (iter lst-str acc)
     (cond
       [(empty? lst-str) acc]
       [else
-       (if (> string-length (first lst-str) acc)
+       (if (> (string-length (first lst-str)) acc)
            (iter (rest lst-str) (string-length (first lst-str)))
            (iter (rest lst-str) acc))]))
   (iter lst-str0 0))
 
-#;(define (completa-string lds maior)
+#|
+Lista(Strings) maior -> Lista(Strings).
+Retorna uma lista de strings com todas as strings do mesmo tamanho.
+|#
+(examples
+ (check-equal? (completa-string-acc (list) 0) empty)
+ (check-equal? (completa-string-acc (list "0") 1) (list "0"))
+ (check-equal? (completa-string-acc (list "10" "5" "7" "1" "4") 2) (list "10" "05" "07" "01" "04"))
+ (check-equal? (completa-string-acc (list "4" "30" "100" "17" "1") 3) (list "004" "030" "100" "017" "001"))
+ (check-equal? (completa-string-acc (list "7" "3" "73" "18" "215" "572" "1000") 4) (list "0007" "0003" "0073" "0018" "0215" "0572" "1000")))
+
+(define (completa-string-acc lds maior)
   (cond
     [(empty? lds) empty]
     [else
      (if (< (string-length (first lds)) maior)
-         (cons (string-append (make-string (- maior (string-length (first lds))) #\0) (first lds)) (completa-string (rest lds) maior))
-         (cons (first lds) (completa-string (rest lds) maior)))]))
+         (cons (string-append (make-string (- maior (string-length (first lds))) #\0) (first lds)) (completa-string-acc (rest lds) maior))
+         (cons (first lds) (completa-string-acc (rest lds) maior)))]))
       
 ;; EXERCÍCIO 6
 
 #| ANÁLISE
-Verificar se uma string é um palíndromo.
+Verificar se uma string é um palíndromo, utilizando as funções map, filter e foldl e sem o uso de recursão.
 |#
 
 #| DEFINIÇÃO TIPOS DE DADOS
@@ -375,8 +404,8 @@ palavra é uma string.
 |#
 
 #| ESPECIFICAÇÃO
-String -> Boolean.
-A função verifica se a string dada é um palíndromo (leitura da direita pra esquerda é igual a leitura da esquerda para a direita).
+palavra -> Boolean.
+A função verifica se uma string é um palíndromo (leitura da direita pra esquerda é igual a leitura da esquerda para a direita).
 Retorna #t caso a string seja um palíndromo, #f caso contrário.
 |#
 
@@ -387,6 +416,7 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
  (check-equal? (eh-palindromo? "sós") #t)
  (check-equal? (eh-palindromo? "A Daniela ama a lei? Nada!") #t)
  (check-equal? (eh-palindromo? "À Rita, sátira!") #t)
+ (check-equal? (eh-palindromo? "Luza Rocelina, a namorada do Manuel, leu na moda da romana: \"anil é cor azul\".") #t)
  (check-equal? (eh-palindromo? "20/02/2002") #t)
  (check-equal? (eh-palindromo? "roma") #f))
 
@@ -399,4 +429,4 @@ Retorna #t caso a string seja um palíndromo, #f caso contrário.
   (equal? lst-limpa reverso-lst-limpa))
 
 ;; lista de pontuações, utilizada para removê-las da lista.
-(define lst-pontuacao '("-" "/" "?" "!" "," "." ";" " "))
+(define lst-pontuacao '("-" "/" "?" "!" "," "." " " #\" ";" ":" "\"" "(" ")" "[" "]"))
