@@ -24,7 +24,8 @@
 %  |4   6|  é representado por bloco(3, 6, 7, 4).
 %  |  7  |
 %
-%  Dizemos que um bloco está em posição adequada se ... COMPLETE!
+%  Dizemos que um bloco está em posição adequada se os valores de suas bordas
+%  são equivalentes aos valores das bordas dos blocos adjacentes.
 %
 %  Dica: Implemente inicialmente o predicado bloco_adequado e depois
 %  blocos_adequados. Crie predicados auxiliares se necessário. Depois que o
@@ -365,15 +366,15 @@ test(j3x3_falha, fail) :-
 
 blocos_adequados(Jogo) :-
     Jogo = jogo(_, _, Blocos),
-    length(Blocos, N),
-    blocos_adequados(Jogo, N, 0).
+    length(Blocos, Tamanho),
+    blocos_adequados(Jogo, Tamanho, 0).
 
-blocos_adequados(Jogo, N, P) :-
-    P >= N
+blocos_adequados(Jogo, Tamanho, P) :-
+    P >= Tamanho
     ;
     bloco_adequado(Jogo, P),
     P1 is P + 1,
-    blocos_adequados(Jogo, N, P1),
+    blocos_adequados(Jogo, Tamanho, P1),
     !.
 
 %% bloco_adequado(?Jogo, +P) is semidet
@@ -508,19 +509,19 @@ bloco_adequado(Jogo, P) :-
     Bloco_atual = bloco(Cima, Direita, Baixo, Esquerda),
     (P < C ->
         P1 is P+C,
-        nth0(P1, Blocos, bloco(Cima1, _, _, _)),
-        Baixo = Cima1
+        nth0(P1, Blocos, bloco(Cima_bloco_abaixo, _, _, _)),
+        Baixo = Cima_bloco_abaixo
         ;
         P1 is P-C,
-        nth0(P1, Blocos, bloco(_, _, Baixo1, _)),
-        Cima = Baixo1
+        nth0(P1, Blocos, bloco(_, _, Baixo_bloco_acima, _)),
+        Cima = Baixo_bloco_acima
     ),
     (P mod C =:= 0 ->
         P2 is P+1,
-        nth0(P2, Blocos, bloco(_, _, _, Esquerda1)),
-        Direita = Esquerda1
+        nth0(P2, Blocos, bloco(_, _, _, Esquerda_bloco_a_direita)),
+        Direita = Esquerda_bloco_a_direita
         ;
         P2 is P-1,
-        nth0(P2, Blocos, bloco(_, Direita1, _, _)),
-        Esquerda = Direita1
+        nth0(P2, Blocos, bloco(_, Direita_bloco_a_esquerda, _, _)),
+        Esquerda = Direita_bloco_a_esquerda
     ).
